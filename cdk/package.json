@@ -8,7 +8,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "predeploy": "cd .. && npm run build",
+    "deploy": "cdk deploy --profile produser"
   },
   "devDependencies": {
     "@types/jest": "^29.2.4",
@@ -23,6 +25,7 @@
   "dependencies": {
     "aws-cdk-lib": "2.55.1",
     "constructs": "^10.1.193",
+    "dotenv": "^16.0.3",
     "source-map-support": "^0.5.21"
   }
 }
