@@ -29,6 +29,7 @@ export const connect = createAsyncThunk<void, void, { state: RootState }>(
             peerId: ctx.peerId,
             roomId: ctx.roomId,
             digestUserId: ctx.digestUserId,
+            digestPassword: ctx.digestPassword,
           })),
         }))
       )

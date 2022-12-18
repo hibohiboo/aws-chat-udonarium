@@ -8,5 +8,5 @@ export type PeerRoom = {
 export type Room = {
   alias: string;
   roomName: string;
-  peerContexts: { peerId: string; roomId: string; digestUserId: string }[];
+  peerContexts: { peerId: string; roomId: string; digestUserId: string; digestPassword: string }[];
 };

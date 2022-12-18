@@ -16,6 +16,7 @@ const App: React.FC = () => {
         {rooms.map((room) => (
           <li key={room.alias}>
             <span>{room.name}</span>
+            <span>{`${room.hasPassword}`}</span>
             <span>{room.numberOfEntrants}</span>
           </li>
         ))}
