@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
+import { Room } from '@/domain/peerRoom/types';
 import { ObjectFactory } from '../class/core/synchronize-object/object-factory';
 import { ObjectSerializer } from '../class/core/synchronize-object/object-serializer';
 import { ObjectStore } from '../class/core/synchronize-object/object-store';
@@ -133,12 +134,7 @@ export const createPeerUser = (updateCallback: () => void) => {
 
   return myUser;
 };
-interface EventMessage {
-  isSendFromSelf: boolean;
-  eventName: string;
-  sendFrom: string;
-  data: string;
-}
+
 const resetNetwork = () => {
   if (Network.peerContexts.length < 1) {
     Network.open();
@@ -154,7 +150,7 @@ export const getUserId = () => {
   console.log('generated user id');
   return PeerContext.generateId();
 };
-const openRoom = (roomId: string, loomName: string, pass?: string) => {
+const openRoom = (roomId: string, loomName: string, pass: string = '') => {
   const userId = getUserId();
   Network.open(userId, roomId, loomName, pass);
   if (PeerUser.myUser == null) return;
@@ -202,11 +198,6 @@ export const initGameObject = () => {
   ObjectSynchronizer.instance.initialize();
 };
 
-type Room = {
-  alias: string;
-  roomName: string;
-  peerContexts: PeerContext[];
-};
 export const initRooms = async (): Promise<Room[]> => {
   const rooms = await initAndGetRooms();
   return rooms;

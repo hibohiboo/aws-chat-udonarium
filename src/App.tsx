@@ -1,15 +1,8 @@
-import { useEffect, useState } from 'react';
-import { initGameObject, initRooms } from './domain/udonarium/room';
+import { useState } from 'react';
 
 function App() {
   const [count, setCount] = useState(0);
-  useEffect(() => {
-    initGameObject();
-    (async () => {
-      const rooms = await initRooms();
-      console.log(rooms);
-    })();
-  });
+
   return (
     <div className="App">
       <div>

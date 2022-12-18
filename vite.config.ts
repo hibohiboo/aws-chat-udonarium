@@ -22,6 +22,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ['react', 'react-dom', 'react-router-dom'],
+          rtk: ['react-redux', '@reduxjs/toolkit'],
           udonarium: ['crypto-js', 'lzbase62', 'msgpack-lite', 'pako', 'skyway-js'],
         },
       },

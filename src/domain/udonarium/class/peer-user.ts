@@ -22,8 +22,6 @@ export class PeerUser extends GameObject {
 
   declare name: string;
 
-  declare isPublish: boolean;
-
   get isMine(): boolean {
     return PeerUser.myUser != null && PeerUser.myUser === this;
   }
@@ -33,12 +31,9 @@ export class PeerUser extends GameObject {
     SyncVar()(this, 'userId');
     SyncVar()(this, 'peerId');
     SyncVar()(this, 'name');
-    SyncVar()(this, 'isPublish');
-    SyncVar()(this, 'twitterId');
     this.userId = '';
     this.peerId = '';
     this.name = '';
-    this.isPublish = false;
   }
 
   // GameObject Lifecycle
