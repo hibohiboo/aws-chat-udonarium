@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 
 // @ts-ignore
 const dev = process.env.npm_lifecycle_event === 'dev';
@@ -12,6 +12,9 @@ export default defineConfig({
   server: { port: 4200 },
   resolve: {
     alias: [{ find: '@', replacement: '/src' }],
+  },
+  esbuild: {
+    drop: dev ? [] : ['console'],
   },
   build: {
     sourcemap: process.env.NODE_ENV !== 'production',
