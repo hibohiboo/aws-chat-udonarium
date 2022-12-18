@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import ChatRoom from './apps/ChatRoom';
 import useUdonariumChat from './hooks/useUdonariumChat';
-
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 function App() {
-  const [count, setCount] = useState(0);
   const { rooms } = useUdonariumChat();
   return (
     <div className="App">
@@ -14,6 +13,15 @@ function App() {
           </li>
         ))}
       </ul>
+      <ChatRoom
+        model={{
+          message: 'はろー',
+          sender: 'hoge',
+          direction: 'incoming',
+          position: 'normal',
+          type: 'text',
+        }}
+      />
     </div>
   );
 }
