@@ -14,7 +14,7 @@ const ChatRoom: React.FC<{ model: MessageModel }> = ({ model }) => (
         <MessageList>
           <Message model={model} />
         </MessageList>
-        <MessageInput placeholder="Type message here" />
+        <MessageInput attachButton={false} placeholder="Enterで送信。Shift+Enterで改行" />
       </ChatContainer>
     </MainContainer>
   </div>
