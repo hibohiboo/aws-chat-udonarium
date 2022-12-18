@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
-import { Room } from '@/domain/peerRoom/types';
+import { PeerRoom } from '@/domain/peerRoom/types';
 import { ObjectFactory } from '../class/core/synchronize-object/object-factory';
 import { ObjectSerializer } from '../class/core/synchronize-object/object-serializer';
 import { ObjectStore } from '../class/core/synchronize-object/object-store';
@@ -198,11 +198,11 @@ export const initGameObject = () => {
   ObjectSynchronizer.instance.initialize();
 };
 
-export const initRooms = async (): Promise<Room[]> => {
+export const initRooms = async (): Promise<PeerRoom[]> => {
   const rooms = await initAndGetRooms();
   return rooms;
 };
-export const connectRoomByRoomName = async (rooms: Room[], roomName: string) => {
+export const connectRoomByRoomName = async (rooms: PeerRoom[], roomName: string) => {
   const room = rooms.find((room) => room.roomName === roomName);
   if (room) {
     connectRooms(room.peerContexts);
