@@ -24,4 +24,8 @@ export const roomsSelector = createSelector(roomSelector, (state) => {
   });
 });
 
+export const connectedRoomSelector = createSelector(roomSelector, (state) => {
+  return state.connectedRoom;
+});
+
 export type Rooms = ReturnType<typeof roomsSelector>;

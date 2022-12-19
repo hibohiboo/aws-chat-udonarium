@@ -1,12 +1,30 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { PeerRoom } from '@/domain/peerRoom/types';
 import { PeerUserContext } from '@/domain/peerUser/types';
 import { PeerUser } from '@/domain/udonarium/class/peer-user';
-import { createPeerUser, getUsers, initGameObject, initRooms } from '@/domain/udonarium/room';
-import { setRooms } from '@/domain/udonarium/room/rooms';
+import {
+  connectRoomByRoomAlias,
+  createPeerUser,
+  getUsers,
+  initGameObject,
+  initRooms,
+} from '@/domain/udonarium/room';
+import { setPeerUser } from '@/domain/udonarium/room/peerUser';
 import { RootState } from '..';
+import { peerUserSlice } from '../slices/peerUserSlice';
 import { roomSlice } from '../slices/roomSlice';
 
 const peerToContext = (u: PeerUser) => u.toContext() as PeerUserContext;
+const peerRoomToContext = (room: PeerRoom) => ({
+  roomName: room.roomName,
+  alias: room.alias,
+  peerContexts: room.peerContexts.map((ctx) => ({
+    peerId: ctx.peerId,
+    roomId: ctx.roomId,
+    digestUserId: ctx.digestUserId,
+    digestPassword: ctx.digestPassword,
+  })),
+});
 export const connect = createAsyncThunk<void, void, { state: RootState }>(
   'connect',
   async (req, thunkAPI) => {
@@ -14,28 +32,35 @@ export const connect = createAsyncThunk<void, void, { state: RootState }>(
       const users = getUsers();
       const userContexts = users.map(peerToContext);
       console.log('userContexts', userContexts);
-      // thunkAPI.dispatch(peerSlice.actions.setPeers(userContexts));
+      thunkAPI.dispatch(peerUserSlice.actions.setUserContexts(userContexts));
     };
     initGameObject();
     const user = createPeerUser(updateGameObjectHandler);
     const rooms = await initRooms();
     const userContext = peerToContext(user);
+    thunkAPI.dispatch(roomSlice.actions.setRooms(rooms.map(peerRoomToContext)));
     thunkAPI.dispatch(
-      roomSlice.actions.setRooms(
-        rooms.map((room) => ({
-          roomName: room.roomName,
-          alias: room.alias,
-          peerContexts: room.peerContexts.map((ctx) => ({
-            peerId: ctx.peerId,
-            roomId: ctx.roomId,
-            digestUserId: ctx.digestUserId,
-            digestPassword: ctx.digestPassword,
-          })),
-        }))
-      )
+      peerUserSlice.actions.setSelf({
+        userId: userContext.syncData.userId,
+        name: userContext.syncData.name,
+      })
     );
-    setRooms(rooms);
+
+    setPeerUser(user);
     console.log('rooms', rooms);
     console.log('userContext', userContext);
+  }
+);
+export const connectRoom = createAsyncThunk<void, string, { state: RootState }>(
+  'connectRoom',
+  async (req, thunkAPI) => {
+    console.log('alias', req);
+    const room = await connectRoomByRoomAlias(req);
+    console.log('room', room);
+    if (!room) {
+      console.warn('ルームが見つかりません');
+      return;
+    }
+    thunkAPI.dispatch(roomSlice.actions.setConnected(peerRoomToContext(room)));
   }
 );

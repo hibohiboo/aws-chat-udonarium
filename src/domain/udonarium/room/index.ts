@@ -9,6 +9,8 @@ import { EventSystem, Network } from '../class/core/system';
 import { PeerContext } from '../class/core/system/network/peer-context';
 import { PeerUser } from '../class/peer-user';
 import { EVENT_NAME } from '../event/constants';
+import { setPeerUser } from './peerUser';
+
 const skywayKey = import.meta.env.VITE_PUBLIC_SKYWAY_KEY;
 
 const USER_DEFAULT_NAME = 'ななしのTRPG民';
@@ -131,7 +133,7 @@ export const createPeerUser = (updateCallback: () => void) => {
     .on(EVENT_NAME.DISCONNECT_PEER, (event) => {
       console.log(EVENT_NAME.DISCONNECT_PEER, event);
     });
-
+  setPeerUser(myUser);
   return myUser;
 };
 
@@ -202,9 +204,14 @@ export const initRooms = async (): Promise<PeerRoom[]> => {
   const rooms = await initAndGetRooms();
   return rooms;
 };
-export const connectRoomByRoomName = async (rooms: PeerRoom[], roomName: string) => {
-  const room = rooms.find((room) => room.roomName === roomName);
-  if (room) {
-    connectRooms(room.peerContexts);
-  }
+export const connectRoomByRoomAlias = async (alias: string) => {
+  const rooms = await getRooms();
+  const room = rooms.find((room) => room.alias === alias);
+  if (!room) return null;
+  const [first] = room.peerContexts;
+  if (!first) return null;
+  openRoom(first.roomId, room.roomName);
+
+  connectRooms(room.peerContexts);
+  return room;
 };

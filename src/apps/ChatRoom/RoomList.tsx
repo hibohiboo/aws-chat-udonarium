@@ -14,7 +14,10 @@ const rowStyle = {
   numberOfEntrants: { display: 'inline-block', width: '30px' },
   connect: { display: 'inline-block', width: '120px', verticalAlign: 'baseline' },
 } as const;
-const RoomList: React.FC<{ rooms: Rooms }> = ({ rooms }) => {
+const RoomList: React.FC<{ rooms: Rooms; connectRoom: (alias: string) => void }> = ({
+  rooms,
+  connectRoom,
+}) => {
   if (!rooms) return <Loader />;
   if (rooms.length === 0) {
     return <div style={{ margin: '0 auto' }}>入室可能な部屋はありません。</div>;
@@ -36,7 +39,13 @@ const RoomList: React.FC<{ rooms: Rooms }> = ({ rooms }) => {
           <span style={rowStyle.hasPassword}>{`${room.hasPassword ? '🔒️' : ''}`}</span>
           <span style={rowStyle.numberOfEntrants}>{room.numberOfEntrants}</span>
           <span style={rowStyle.connect}>
-            <ArrowButton border direction="right">
+            <ArrowButton
+              border
+              direction="right"
+              onClick={() => {
+                connectRoom(room.alias);
+              }}
+            >
               接続
             </ArrowButton>
           </span>

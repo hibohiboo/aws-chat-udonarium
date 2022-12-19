@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { peerUserSlice } from './slices/peerUserSlice';
 import { roomSlice } from './slices/roomSlice';
 
 export const store = configureStore({
   reducer: {
     room: roomSlice.reducer,
+    peerUser: peerUserSlice.reducer,
   },
 });
 
