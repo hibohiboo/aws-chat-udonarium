@@ -16,6 +16,10 @@ const rowStyle = {
 } as const;
 const RoomList: React.FC<{ rooms: Rooms }> = ({ rooms }) => {
   if (!rooms) return <Loader />;
+  if (rooms.length === 0) {
+    return <div style={{ margin: '0 auto' }}>入室可能な部屋はありません。</div>;
+  }
+
   return (
     <ul style={{ listStyle: 'none', width: '500px', margin: '0 auto' }}>
       <li style={{ textAlign: 'center', fontWeight: 'bold' }}>
