@@ -7,27 +7,11 @@ import { ObjectStore } from '../class/core/synchronize-object/object-store';
 import { ObjectSynchronizer } from '../class/core/synchronize-object/object-synchronizer';
 import { EventSystem, Network } from '../class/core/system';
 import { PeerContext } from '../class/core/system/network/peer-context';
-import { PeerUser } from '../class/peer-user';
+import { PeerCursor } from '../class/peer-cursor';
 import { EVENT_NAME } from '../event/constants';
-import { setPeerUser } from './peerUser';
+import { createPeerCursor } from './peerUser';
 
 const skywayKey = import.meta.env.VITE_PUBLIC_SKYWAY_KEY;
-
-const USER_DEFAULT_NAME = 'ななしのTRPG民';
-export const getUsers = () => {
-  return ObjectStore.instance.getObjects<PeerUser>(PeerUser);
-};
-export const getUser = () => {
-  const user = PeerUser.myUser;
-  if (!user) throw new Error('初期化前には使用しないでください');
-  return user;
-};
-
-const initUser = () => {
-  const myUser = PeerUser.createMyUser();
-  myUser.name = USER_DEFAULT_NAME;
-  return myUser;
-};
 
 const initNetwork = () =>
   new Promise<string>((resolve) => {
@@ -85,7 +69,7 @@ export const createRoom = async (roomName: string, roomPassword = '') => {
   Network.open(userId, PeerContext.generateId('***'), roomName, roomPassword);
 };
 export const createPeerUser = (updateCallback: () => void) => {
-  const myUser = initUser();
+  const myUser = createPeerCursor();
 
   EventSystem.register('application init')
     .on(EVENT_NAME.UPDATE_GAME_OBJECT, (event) => {
@@ -133,15 +117,14 @@ export const createPeerUser = (updateCallback: () => void) => {
     .on(EVENT_NAME.DISCONNECT_PEER, (event) => {
       console.log(EVENT_NAME.DISCONNECT_PEER, event);
     });
-  setPeerUser(myUser);
   return myUser;
 };
 
 const resetNetwork = () => {
   if (Network.peerContexts.length < 1) {
     Network.open();
-    if (PeerUser.myUser == null) return;
-    PeerUser.myUser.peerId = Network.peerId;
+    if (PeerCursor.myCursor == null) return;
+    PeerCursor.myCursor.peerId = Network.peerId;
   }
 };
 export const getUserId = () => {
@@ -155,8 +138,8 @@ export const getUserId = () => {
 const openRoom = (roomId: string, loomName: string, pass: string = '') => {
   const userId = getUserId();
   Network.open(userId, roomId, loomName, pass);
-  if (PeerUser.myUser == null) return;
-  PeerUser.myUser.peerId = Network.peerId;
+  if (PeerCursor.myCursor == null) return;
+  PeerCursor.myCursor.peerId = Network.peerId;
 };
 const listenPeerEvent = (triedPeer: string[], peerContexts: PeerContext[]) => {
   EventSystem.register(triedPeer)

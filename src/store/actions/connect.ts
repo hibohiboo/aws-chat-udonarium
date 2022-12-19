@@ -1,20 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { PeerRoom } from '@/domain/peerRoom/types';
 import { PeerUserContext } from '@/domain/peerUser/types';
-import { PeerUser } from '@/domain/udonarium/class/peer-user';
+import { PeerCursor } from '@/domain/udonarium/class/peer-cursor';
 import {
   connectRoomByRoomAlias,
   createPeerUser,
-  getUsers,
   initGameObject,
   initRooms,
 } from '@/domain/udonarium/room';
-import { setPeerUser } from '@/domain/udonarium/room/peerUser';
+import { getUsers } from '@/domain/udonarium/room/peerUser';
 import { RootState } from '..';
 import { peerUserSlice } from '../slices/peerUserSlice';
 import { roomSlice } from '../slices/roomSlice';
 
-const peerToContext = (u: PeerUser) => u.toContext() as PeerUserContext;
+const peerToContext = (u: PeerCursor) => u.toContext() as PeerUserContext;
 const peerRoomToContext = (room: PeerRoom) => ({
   roomName: room.roomName,
   alias: room.alias,
@@ -46,7 +45,6 @@ export const connect = createAsyncThunk<void, void, { state: RootState }>(
       })
     );
 
-    setPeerUser(user);
     console.log('rooms', rooms);
     console.log('userContext', userContext);
   }
