@@ -14,7 +14,6 @@ export const chatMessagesSelector = createSelector(
       return state.list.map((chat) => ({
         message: chat.message,
         sender: chat.sender,
-        direction: chat.isSelf ? 'outgoing' : 'incoming',
         position: 'single',
         type: 'text',
       }));
@@ -22,7 +21,6 @@ export const chatMessagesSelector = createSelector(
     return state.list.map((chat, index) => ({
       message: chat.message,
       sender: chat.sender,
-      direction: chat.isSelf ? 'outgoing' : 'incoming',
       position: index === 0 ? 'first' : index === lastNumber ? 'last' : 'normal',
       type: 'text',
     }));

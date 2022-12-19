@@ -14,8 +14,10 @@ const ChatRoom: React.FC<{ models: MessageModel[]; roomName: string }> = ({ mode
       <MainContainer>
         <ChatContainer>
           <MessageList>
-            {models.map((model) => (
-              <Message model={model} />
+            {models.map((model, index) => (
+              <Message model={model} key={index}>
+                <Message.Header sender={model.sender} />
+              </Message>
             ))}
           </MessageList>
           <MessageInput attachButton={false} placeholder="Enterで送信。Shift+Enterで改行" />
