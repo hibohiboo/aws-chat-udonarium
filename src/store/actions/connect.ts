@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AcceptGameObjectAlias } from '@/domain/gameObject/constants';
 import { PeerRoom } from '@/domain/peerRoom/types';
 import { PeerUserContext } from '@/domain/peerUser/types';
 import { PeerCursor } from '@/domain/udonarium/class/peer-cursor';
@@ -20,14 +21,21 @@ const peerRoomToContext = (room: PeerRoom) => ({
     digestPassword: ctx.digestPassword,
   })),
 });
+const updatePeers = (thunkAPI: { dispatch: any }) => {
+  const users = getUsers();
+  const userContexts = users.map(peerToContext);
+  console.log('userContexts', userContexts);
+  thunkAPI.dispatch(peerUserSlice.actions.setUserContexts(userContexts));
+};
+
 export const connect = createAsyncThunk<void, void, { state: RootState }>(
   'connect',
   async (req, thunkAPI) => {
-    const updateGameObjectHandler = () => {
-      const users = getUsers();
-      const userContexts = users.map(peerToContext);
-      console.log('userContexts', userContexts);
-      thunkAPI.dispatch(peerUserSlice.actions.setUserContexts(userContexts));
+    const updateGameObjectHandler = (alias: AcceptGameObjectAlias) => {
+      console.log('alias', alias);
+      if (alias === 'PeerCusor') {
+        updatePeers(thunkAPI);
+      }
     };
     const { user, rooms } = await initUdonarium(updateGameObjectHandler);
     const userContext = peerToContext(user);
@@ -54,5 +62,6 @@ export const connectRoom = createAsyncThunk<void, string, { state: RootState }>(
       return;
     }
     thunkAPI.dispatch(roomSlice.actions.setConnected(peerRoomToContext(room)));
+    updatePeers(thunkAPI);
   }
 );

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
+import { checkAcceptObject } from '@/domain/gameObject/checkAcceptObject';
+import { AcceptGameObjectAlias } from '@/domain/gameObject/constants';
 import { ImageSharingSystem } from '../class/core/file-storage/image-sharing-system';
 import { ImageStorage } from '../class/core/file-storage/image-storage';
 import { ObjectFactory } from '../class/core/synchronize-object/object-factory';
@@ -20,19 +22,24 @@ const initGameObject = () => {
   ObjectSynchronizer.instance.initialize();
 };
 
-export const initUdonarium = async (updateGameObjectHandler: () => void) => {
+type UpdateCallback = (alias: AcceptGameObjectAlias) => void;
+export const initUdonarium = async (updateGameObjectHandler: UpdateCallback) => {
   initGameObject();
   const user = createPeerUser(updateGameObjectHandler);
   const rooms = await initRooms();
   return { user, rooms };
 };
-const createPeerUser = (updateCallback: () => void) => {
+const createPeerUser = (updateCallback: UpdateCallback) => {
   const myUser = createPeerCursor();
 
   EventSystem.register('application init')
     .on(EVENT_NAME.UPDATE_GAME_OBJECT, (event) => {
-      console.log(EVENT_NAME.UPDATE_GAME_OBJECT, event);
-      updateCallback();
+      if (import.meta.env.DEV && checkAcceptObject(event.data.aliasName)) {
+        console.log(EVENT_NAME.UPDATE_GAME_OBJECT, event);
+        updateCallback(event.data.aliasName);
+      } else if (event.data.aliasName == null) {
+        console.log('even alias null', event);
+      }
     })
     .on(EVENT_NAME.DELETE_GAME_OBJECT, (event) => {
       console.log(EVENT_NAME.DELETE_GAME_OBJECT, event);
