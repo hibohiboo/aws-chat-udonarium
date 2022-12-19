@@ -1,6 +1,6 @@
 import { EventObject } from '../udonarium/event/types';
 
-type Identifer = string; // UUID
+export type Identifer = string; // UUID
 type GameObject<AliasName, T> = {
   aliasName: AliasName;
   identifier: Identifer;

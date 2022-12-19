@@ -1,21 +1,17 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ChatMessageContext } from '@/domain/gameObject/chat/types';
 
-// コンパイラが ts4023のエラーを const store = configureStore で出すので解決のためにexport
-export interface ChatMessageState {
-  list: ChatMessageContext[];
-}
-
-const initialState: ChatMessageState = {
-  list: [],
-};
+export const chatMessagesAdapter = createEntityAdapter<ChatMessageContext>({
+  selectId: (chat) => chat.id,
+  sortComparer: (a, b) => a.timestamp - b.timestamp,
+});
 
 export const chatMessageSlice = createSlice({
   name: 'chatMessage',
-  initialState,
+  initialState: chatMessagesAdapter.getInitialState(),
   reducers: {
     addMessage(state, action: PayloadAction<ChatMessageContext>) {
-      state.list.push(action.payload);
+      chatMessagesAdapter.upsertOne(state, action.payload);
     },
   },
 });

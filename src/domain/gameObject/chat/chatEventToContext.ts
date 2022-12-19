@@ -11,10 +11,17 @@ const getUserName = (userId: string) => {
 };
 
 export const chatEventToModel = (event: ChatMessageEvent): ChatMessageContext | null => {
+  const base = {
+    id: event.data.identifier,
+    message: event.data.syncData.value,
+    isSelf: event.isSendFromSelf,
+    timestamp: event.data.syncData.attributes.timestamp,
+    tab: event.data.syncData.parentIdentifier,
+  };
   if (event.data.syncData.attributes.originFrom) {
     const name = getUserName(event.data.syncData.attributes.originFrom);
     return {
-      message: event.data.syncData.value,
+      ...base,
       sender: `${name} : ${event.data.syncData.attributes.from}:  ${event.data.syncData.attributes.originFrom}`,
       isSelf: event.isSendFromSelf,
     };
@@ -22,8 +29,7 @@ export const chatEventToModel = (event: ChatMessageEvent): ChatMessageContext | 
   const sender = getUserName(event.data.syncData.attributes.from);
 
   return {
-    message: event.data.syncData.value,
+    ...base,
     sender: `${sender}: ${event.data.syncData.attributes.from}`,
-    isSelf: event.isSendFromSelf,
   };
 };

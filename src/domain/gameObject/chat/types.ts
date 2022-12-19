@@ -1,5 +1,5 @@
 import { UserId } from '@/domain/peerUser/types';
-import { UpdateGameObjectEvent } from '../types';
+import { Identifer, UpdateGameObjectEvent } from '../types';
 
 export type ChatMessageEvent = UpdateGameObjectEvent<'chat', ChatSyncData>;
 
@@ -20,13 +20,17 @@ type ChatSyncData = {
 };
 type FromUserName = string;
 export type ChatMessageContext = {
+  id: Identifer;
   message: Message;
   sender: FromUserName;
+  timestamp: number;
   isSelf: boolean;
+  tab: TabIdentifer;
 };
 export type ChatMessageModel = {
   message: Message;
   sender: FromUserName;
+  sentTime: string;
   // direction: 'incoming' | 'outgoing'; ... チャットの名前が表示されなくなる
   position: 'normal' | 'first' | 'last' | 'single';
   type: 'text';
