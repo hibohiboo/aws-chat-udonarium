@@ -23,3 +23,5 @@ export const roomsSelector = createSelector(roomSelector, (state) => {
     ];
   });
 });
+
+export type Rooms = ReturnType<typeof roomsSelector>;
