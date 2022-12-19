@@ -13,12 +13,14 @@ export const getPeerUser = () => {
   return peerUser;
 };
 export const createPeerCursor = () => {
-  let fileContext = ImageFile.createEmpty('none_icon').toContext();
+  const fileContext = ImageFile.createEmpty('none_icon').toContext();
   fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
-  let noneIconImage = ImageStorage.instance.add(fileContext);
+  const noneIconImage = ImageStorage.instance.add(fileContext);
   const myCursor = PeerCursor.createMyCursor();
   myCursor.name = 'プレイヤー';
   myCursor.imageIdentifier = noneIconImage.identifier;
+  PeerCursor.myCursor!.name = 'プレイヤー';
+  PeerCursor.myCursor!.imageIdentifier = noneIconImage.identifier;
   setPeerUser(myCursor);
   return myCursor;
 };

@@ -13,14 +13,14 @@ export interface ImageContext {
   name: string;
   type: string;
   blob: Blob | null;
-  url: string;
+  url: string | null;
   thumbnail: ThumbnailContext;
 }
 
 export interface ThumbnailContext {
   type: string;
-  blob: Blob;
-  url: string;
+  blob: Blob | null;
+  url: string | null;
 }
 
 export class ImageFile {
@@ -43,10 +43,10 @@ export class ImageFile {
   get name(): string {
     return this.context.name;
   }
-  get blob(): Blob {
+  get blob(): Blob | null {
     return this.context.blob ? this.context.blob : this.context.thumbnail.blob;
   }
-  get url(): string {
+  get url(): string | null {
     return this.context.url ? this.context.url : this.context.thumbnail.url;
   }
   get thumbnail(): ThumbnailContext {
@@ -131,7 +131,7 @@ export class ImageFile {
     if (!this.context.blob && context.blob) this.context.blob = context.blob;
     if (!this.context.type && context.type) this.context.type = context.type;
     if (!this.context.url && context.url) {
-      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(this.context.url);
+      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(context.url);
       this.context.url = context.url;
     }
     if (!this.context.thumbnail.blob && context.thumbnail.blob)
@@ -139,7 +139,7 @@ export class ImageFile {
     if (!this.context.thumbnail.type && context.thumbnail.type)
       this.context.thumbnail.type = context.thumbnail.type;
     if (!this.context.thumbnail.url && context.thumbnail.url) {
-      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(this.context.thumbnail.url);
+      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(context.thumbnail.url);
       this.context.thumbnail.url = context.thumbnail.url;
     }
     this.createURLs();
@@ -170,8 +170,8 @@ export class ImageFile {
 
   private revokeURLs() {
     if (this.state === ImageState.URL) return;
-    window.URL.revokeObjectURL(this.context.url);
-    window.URL.revokeObjectURL(this.context.thumbnail.url);
+    if (this.context.url) window.URL.revokeObjectURL(this.context.url);
+    if (this.context.thumbnail.url) window.URL.revokeObjectURL(this.context.thumbnail.url);
   }
 
   private static createThumbnailAsync(context: ImageContext): Promise<ThumbnailContext> {
@@ -206,7 +206,7 @@ export class ImageFile {
       image.onabort = image.onerror = () => {
         reject();
       };
-      image.src = context.url;
+      if (context.url) image.src = context.url;
     });
   }
 

@@ -1,10 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-
 import { PeerRoom } from '@/domain/peerRoom/types';
-import { ObjectFactory } from '../class/core/synchronize-object/object-factory';
-import { ObjectSerializer } from '../class/core/synchronize-object/object-serializer';
-import { ObjectStore } from '../class/core/synchronize-object/object-store';
-import { ObjectSynchronizer } from '../class/core/synchronize-object/object-synchronizer';
 import { EventSystem, Network } from '../class/core/system';
 import { PeerContext } from '../class/core/system/network/peer-context';
 import { PeerCursor } from '../class/peer-cursor';
@@ -174,13 +168,6 @@ export const connectRooms = (peerContexts: PeerContext[]) => {
 
     listenPeerEvent(triedPeer, peerContexts);
   });
-};
-
-export const initGameObject = () => {
-  ObjectFactory.instance;
-  ObjectSerializer.instance;
-  ObjectStore.instance;
-  ObjectSynchronizer.instance.initialize();
 };
 
 export const initRooms = async (): Promise<PeerRoom[]> => {
