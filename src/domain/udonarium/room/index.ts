@@ -3,7 +3,6 @@ import { EventSystem, Network } from '../class/core/system';
 import { PeerContext } from '../class/core/system/network/peer-context';
 import { PeerCursor } from '../class/peer-cursor';
 import { EVENT_NAME } from '../event/constants';
-import { createPeerCursor } from './peerUser';
 
 const skywayKey = import.meta.env.VITE_PUBLIC_SKYWAY_KEY;
 
@@ -61,57 +60,6 @@ const initAndGetRooms = async () => {
 export const createRoom = async (roomName: string, roomPassword = '') => {
   const userId = Network.peerContext ? Network.peerContext.userId : PeerContext.generateId();
   Network.open(userId, PeerContext.generateId('***'), roomName, roomPassword);
-};
-export const createPeerUser = (updateCallback: () => void) => {
-  const myUser = createPeerCursor();
-
-  EventSystem.register('application init')
-    .on(EVENT_NAME.UPDATE_GAME_OBJECT, (event) => {
-      console.log(EVENT_NAME.UPDATE_GAME_OBJECT, event);
-      updateCallback();
-    })
-    .on(EVENT_NAME.DELETE_GAME_OBJECT, (event) => {
-      console.log(EVENT_NAME.DELETE_GAME_OBJECT, event);
-    })
-    .on(EVENT_NAME.OPEN_NETWORK, (event) => {
-      console.log(EVENT_NAME.OPEN_NETWORK, event.data.peerId);
-      myUser.peerId = Network.peerContext.peerId;
-      myUser.userId = Network.peerContext.userId;
-    })
-    .on(EVENT_NAME.NETWORK_ERROR, (event) => {
-      console.log(EVENT_NAME.NETWORK_ERROR, event.data.peerId);
-      const { errorType } = event.data;
-      const { errorMessage } = event.data;
-
-      (async () => {
-        // SKyWayエラーハンドリング
-        const quietErrorTypes = ['peer-unavailable'];
-        const reconnectErrorTypes = [
-          'disconnected',
-          'socket-error',
-          'unavailable-id',
-          'authentication',
-          'server-error',
-        ];
-
-        if (quietErrorTypes.includes(errorType)) return;
-        alert(`ネットワークエラー -> ${errorMessage}`);
-
-        if (!reconnectErrorTypes.includes(errorType)) return;
-        alert(`ネットワークエラー -> このウィンドウを閉じると再接続を試みます。`);
-        Network.open();
-      })();
-    })
-    .on(EVENT_NAME.CONNECT_PEER, (event) => {
-      if (event.isSendFromSelf) {
-        console.log('send from self peer', event);
-      }
-      console.log(EVENT_NAME.CONNECT_PEER, event);
-    })
-    .on(EVENT_NAME.DISCONNECT_PEER, (event) => {
-      console.log(EVENT_NAME.DISCONNECT_PEER, event);
-    });
-  return myUser;
 };
 
 const resetNetwork = () => {
