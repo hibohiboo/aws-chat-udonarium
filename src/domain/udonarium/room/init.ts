@@ -25,7 +25,7 @@ const initGameObject = () => {
   ChatTabList.instance.initialize();
 };
 
-type UpdateCallback = (alias: AcceptGameObjectAlias) => void;
+type UpdateCallback = (alias: AcceptGameObjectAlias, event: unknown) => void;
 export const initUdonarium = async (updateGameObjectHandler: UpdateCallback) => {
   initGameObject();
   const user = createPeerUser(updateGameObjectHandler);
@@ -39,7 +39,7 @@ const createPeerUser = (updateCallback: UpdateCallback) => {
     .on(EVENT_NAME.UPDATE_GAME_OBJECT, (event) => {
       if (import.meta.env.DEV && checkAcceptObject(event.data.aliasName)) {
         console.log(EVENT_NAME.UPDATE_GAME_OBJECT, event);
-        updateCallback(event.data.aliasName);
+        updateCallback(event.data.aliasName, event);
       } else if (event.data.aliasName == null) {
         console.log('even alias null', event);
       }

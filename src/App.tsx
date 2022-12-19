@@ -13,16 +13,7 @@ const App: React.FC = () => {
       {viewModel.room == null ? (
         <RoomList rooms={viewModel.rooms} connectRoom={viewModel.connectRoomHandler} />
       ) : (
-        <ChatRoom
-          roomName={viewModel.room.roomName}
-          model={{
-            message: 'はろー',
-            sender: 'hoge',
-            direction: 'incoming',
-            position: 'normal',
-            type: 'text',
-          }}
-        />
+        <ChatRoom roomName={viewModel.room.roomName} models={viewModel.messages} />
       )}
     </div>
   );

@@ -1,4 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { chatEventToModel } from '@/domain/gameObject/chat/chatEventToContext';
+import { ChatMessageEvent } from '@/domain/gameObject/chat/types';
 import { AcceptGameObjectAlias } from '@/domain/gameObject/constants';
 import { PeerRoom } from '@/domain/peerRoom/types';
 import { PeerUserContext } from '@/domain/peerUser/types';
@@ -7,6 +9,7 @@ import { connectRoomByRoomAlias } from '@/domain/udonarium/room';
 import { initUdonarium } from '@/domain/udonarium/room/init';
 import { getUsers } from '@/domain/udonarium/room/peerUser';
 import { RootState } from '..';
+import { chatMessageSlice } from '../slices/chatMessageSlice';
 import { peerUserSlice } from '../slices/peerUserSlice';
 import { roomSlice } from '../slices/roomSlice';
 
@@ -27,14 +30,20 @@ const updatePeers = (thunkAPI: { dispatch: any }) => {
   console.log('userContexts', userContexts);
   thunkAPI.dispatch(peerUserSlice.actions.setUserContexts(userContexts));
 };
+const addChat = (thunkAPI: { dispatch: any }, event: ChatMessageEvent) => {
+  const message = chatEventToModel(event);
+  thunkAPI.dispatch(chatMessageSlice.actions.addMessage(message));
+};
 
 export const connect = createAsyncThunk<void, void, { state: RootState }>(
   'connect',
   async (req, thunkAPI) => {
-    const updateGameObjectHandler = (alias: AcceptGameObjectAlias) => {
+    const updateGameObjectHandler = (alias: AcceptGameObjectAlias, event: unknown) => {
       console.log('alias', alias);
       if (alias === 'PeerCusor') {
         updatePeers(thunkAPI);
+      } else if (alias === 'chat') {
+        addChat(thunkAPI, event as ChatMessageEvent);
       }
     };
     const { user, rooms } = await initUdonarium(updateGameObjectHandler);

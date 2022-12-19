@@ -1,4 +1,5 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { chatMessageSlice } from './slices/chatMessageSlice';
 import { peerUserSlice } from './slices/peerUserSlice';
 import { roomSlice } from './slices/roomSlice';
 
@@ -6,6 +7,7 @@ export const store = configureStore({
   reducer: {
     room: roomSlice.reducer,
     peerUser: peerUserSlice.reducer,
+    chatMessage: chatMessageSlice.reducer,
   },
 });
 
