@@ -42,7 +42,7 @@ export class ObjectFactory {
   create<T extends GameObject>(alias: string, identifer?: string): T | null {
     const ClassConstructor = this.constructorMap.get(alias);
     if (!ClassConstructor) {
-      console.error(`${alias}という名のGameObjectクラスは定義されていません`);
+      console.warn(`${alias}という名のGameObjectクラスは定義されていません`);
       return null;
     }
     const gameObject: GameObject = new ClassConstructor(identifer);
