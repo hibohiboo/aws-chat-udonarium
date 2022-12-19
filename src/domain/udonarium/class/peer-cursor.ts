@@ -11,10 +11,21 @@ type ObjectIdentifier = string;
 
 @SyncObject('PeerCursor')
 export class PeerCursor extends GameObject {
-  @SyncVar() userId: UserId = '';
-  @SyncVar() peerId: PeerId = '';
-  @SyncVar() name: string = '';
-  @SyncVar() imageIdentifier: string = '';
+  declare userId: UserId;
+  declare peerId: PeerId;
+  declare name: string;
+  declare imageIdentifier: string;
+  constructor(identifier?: string) {
+    super(identifier);
+    SyncVar()(this, 'userId');
+    this.userId = '';
+    SyncVar()(this, 'peerId');
+    this.peerId = '';
+    SyncVar()(this, 'name');
+    this.name = '';
+    SyncVar()(this, 'imageIdentifier');
+    this.imageIdentifier = '';
+  }
 
   static myCursor: PeerCursor | null = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
