@@ -1,3 +1,4 @@
+import { EVENT_NAME } from '@/domain/udonarium/event/constants';
 import { EventSystem } from '../system';
 import { MessagePack } from '../system/util/message-pack';
 import { ResettableTimeout } from '../system/util/resettable-timeout';
@@ -84,7 +85,8 @@ export class BufferSharingTask<T> {
 
   cancel() {
     if (this.isCanceled) return;
-    if (this.sendTo != null) EventSystem.call('CANCEL_TASK_' + this.identifier, null, this.sendTo);
+    if (this.sendTo != null)
+      EventSystem.call(EVENT_NAME.CANCEL_TASK_ + this.identifier, null, this.sendTo);
     this._cancel();
   }
 
@@ -114,7 +116,7 @@ export class BufferSharingTask<T> {
     console.log('チャンク分割 ' + this.identifier, this.chanks.length);
 
     EventSystem.register(this)
-      .on<number>('FILE_MORE_CHANK_' + this.identifier, (event) => {
+      .on<number>(EVENT_NAME.FILE_MORE_CHANK_ + this.identifier, (event) => {
         if (this.sendTo !== event.sendFrom) return;
         this.completedChankIndex = event.data;
         if (this.sendChankTimer == null && this.sentChankIndex + 1 < this.chanks.length) {
@@ -122,12 +124,12 @@ export class BufferSharingTask<T> {
         }
         this.resetTimeout();
       })
-      .on('DISCONNECT_PEER', (event) => {
+      .on(EVENT_NAME.DISCONNECT_PEER, (event) => {
         if (event.data.peerId !== this.sendTo) return;
         console.warn('送信キャンセル（Peer切断）', this, event.data.peerId);
         this._cancel();
       })
-      .on('CANCEL_TASK_' + this.identifier, (event) => {
+      .on(EVENT_NAME.CANCEL_TASK_ + this.identifier, (event) => {
         console.warn('送信キャンセル', this, event.sendFrom);
         this._cancel();
       });
@@ -140,7 +142,7 @@ export class BufferSharingTask<T> {
     if (this.uint8Array == null) return;
     let chank = this.uint8Array.slice(index * this.chankSize, (index + 1) * this.chankSize);
     let data = { index: index, length: this.chanks.length, chank: chank };
-    EventSystem.call('FILE_SEND_CHANK_' + this.identifier, data, this.sendTo);
+    EventSystem.call(EVENT_NAME.FILE_SEND_CHANK_ + this.identifier, data, this.sendTo);
     this.sentChankIndex = index;
     this.sendChankTimer = null;
     if (this.chanks.length <= index + 1) {
@@ -161,7 +163,7 @@ export class BufferSharingTask<T> {
     this.startTime = performance.now();
     this.chankReceiveCount = 0;
     EventSystem.register(this)
-      .on<ChankData>('FILE_SEND_CHANK_' + this.identifier, (event) => {
+      .on<ChankData>(EVENT_NAME.FILE_SEND_CHANK_ + this.identifier, (event) => {
         if (this.chanks.length < 1) this.chanks = new Array(event.data.length);
 
         if (this.chanks[event.data.index] != null) {
@@ -175,15 +177,19 @@ export class BufferSharingTask<T> {
           this.finishReceive();
         } else {
           this.resetTimeout();
-          EventSystem.call('FILE_MORE_CHANK_' + this.identifier, event.data.index, event.sendFrom);
+          EventSystem.call(
+            EVENT_NAME.FILE_MORE_CHANK_ + this.identifier,
+            event.data.index,
+            event.sendFrom
+          );
         }
       })
-      .on('DISCONNECT_PEER', (event) => {
+      .on(EVENT_NAME.DISCONNECT_PEER, (event) => {
         if (event.data.peerId !== this.sendTo) return;
         console.warn('受信キャンセル（Peer切断）', this, event.data.peerId);
         this._cancel();
       })
-      .on('CANCEL_TASK_' + this.identifier, (event) => {
+      .on(EVENT_NAME.CANCEL_TASK_ + this.identifier, (event) => {
         console.warn('受信キャンセル', this, event.sendFrom);
         this._cancel();
       });

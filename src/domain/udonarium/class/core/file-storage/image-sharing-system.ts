@@ -1,3 +1,4 @@
+import { EVENT_NAME } from '@/domain/udonarium/event/constants';
 import { EventSystem, Network } from '../system';
 import { UUID } from '../system/util/uuid';
 import { BufferSharingTask } from './buffer-sharing-task';
@@ -24,15 +25,15 @@ export class ImageSharingSystem {
 
   initialize() {
     EventSystem.register(this)
-      .on('CONNECT_PEER', 1, (event) => {
+      .on(EVENT_NAME.CONNECT_PEER, 1, (event) => {
         if (!event.isSendFromSelf) return;
         console.log('CONNECT_PEER ImageStorageService !!!', event.data.peerId);
         ImageStorage.instance.synchronize();
       })
-      .on('XML_LOADED', (event) => {
+      .on(EVENT_NAME.XML_LOADED, (event) => {
         convertUrlImage(event.data.xmlElement);
       })
-      .on('SYNCHRONIZE_FILE_LIST', (event) => {
+      .on(EVENT_NAME.SYNCHRONIZE_FILE_LIST, (event) => {
         if (event.isSendFromSelf) return;
         console.log('SYNCHRONIZE_FILE_LIST ImageStorageService ' + event.sendFrom);
 
@@ -64,7 +65,7 @@ export class ImageSharingSystem {
         }
         this.request(request, event.sendFrom);
       })
-      .on('REQUEST_FILE_RESOURE', async (event) => {
+      .on(EVENT_NAME.REQUEST_FILE_RESOURE, async (event) => {
         if (event.isSendFromSelf) return;
 
         let request: CatalogItem[] = event.data.identifiers;
@@ -112,7 +113,7 @@ export class ImageSharingSystem {
           );
         }
       })
-      .on('UPDATE_FILE_RESOURE', 1000, (event) => {
+      .on(EVENT_NAME.UPDATE_FILE_RESOURE, 1000, (event) => {
         let updateImages: ImageContext[] = event.data.updateImages;
         console.log(
           'UPDATE_FILE_RESOURE ImageStorageService ' + event.sendFrom + ' -> ',
@@ -127,13 +128,13 @@ export class ImageSharingSystem {
           ImageStorage.instance.add(context);
         }
       })
-      .on('START_FILE_TRANSMISSION', (event) => {
+      .on(EVENT_NAME.START_FILE_TRANSMISSION, (event) => {
         console.log('START_FILE_TRANSMISSION ' + event.data.taskIdentifier);
         let identifier = event.data.taskIdentifier;
         let image: ImageFile | null = ImageStorage.instance.get(identifier);
         if (this.receiveTaskMap.has(identifier) || (image && ImageState.COMPLETE <= image.state)) {
           console.warn('CANCEL_TASK_ ' + identifier);
-          EventSystem.call('CANCEL_TASK_' + identifier, null, event.sendFrom);
+          EventSystem.call(EVENT_NAME.CANCEL_TASK_ + identifier, null, event.sendFrom);
         } else {
           this.startReceiveTask(identifier);
         }
@@ -148,7 +149,7 @@ export class ImageSharingSystem {
     let identifier = updateImages.length === 1 ? updateImages[0].identifier : UUID.generateUuid();
     let task = BufferSharingTask.createSendTask<ImageContext[]>(identifier, sendTo);
     this.sendTaskMap.set(task.identifier, task);
-    EventSystem.call('START_FILE_TRANSMISSION', { taskIdentifier: identifier }, sendTo);
+    EventSystem.call(EVENT_NAME.START_FILE_TRANSMISSION, { taskIdentifier: identifier }, sendTo);
 
     /* hotfix issue #1 */
     for (let context of updateImages) {
@@ -212,7 +213,7 @@ export class ImageSharingSystem {
     let peerIds = Network.peerIds;
     peerIds.splice(peerIds.indexOf(Network.peerId), 1);
     EventSystem.call(
-      'REQUEST_FILE_RESOURE',
+      EVENT_NAME.REQUEST_FILE_RESOURE,
       { identifiers: request, receiver: Network.peerId, candidatePeers: peerIds },
       peerId
     );

@@ -84,7 +84,7 @@ export class ObjectStore {
     if (this.remove(object) === null) return null;
     if (shouldBroadcast)
       if (shouldBroadcast)
-        EventSystem.call('DELETE_GAME_OBJECT', {
+        EventSystem.call(EVENT_NAME.DELETE_GAME_OBJECT, {
           aliasName: object.aliasName,
           identifier: object.identifier,
         });

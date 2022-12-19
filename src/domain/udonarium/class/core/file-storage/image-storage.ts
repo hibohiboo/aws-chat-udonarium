@@ -1,3 +1,4 @@
+import { EVENT_NAME } from '@/domain/udonarium/event/constants';
 import { EventSystem } from '../system';
 import { ResettableTimeout } from '../system/util/resettable-timeout';
 import { ImageContext, ImageFile, ImageState } from './image-file';
@@ -100,7 +101,7 @@ export class ImageStorage {
 
   synchronize(peer?: string) {
     if (this.lazyTimer) this.lazyTimer.stop();
-    EventSystem.call('SYNCHRONIZE_FILE_LIST', this.getCatalog(), peer);
+    EventSystem.call(EVENT_NAME.SYNCHRONIZE_FILE_LIST, this.getCatalog(), peer);
   }
 
   lazySynchronize(ms: number, peer?: string) {
