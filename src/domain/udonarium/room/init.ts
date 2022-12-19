@@ -2,6 +2,7 @@
 
 import { checkAcceptObject } from '@/domain/gameObject/checkAcceptObject';
 import { AcceptGameObjectAlias } from '@/domain/gameObject/constants';
+import { ChatTabList } from '../class/chat-tab-list';
 import { ImageSharingSystem } from '../class/core/file-storage/image-sharing-system';
 import { ImageStorage } from '../class/core/file-storage/image-storage';
 import { ObjectFactory } from '../class/core/synchronize-object/object-factory';
@@ -20,6 +21,8 @@ const initGameObject = () => {
   ObjectSerializer.instance;
   ObjectStore.instance;
   ObjectSynchronizer.instance.initialize();
+
+  ChatTabList.instance.initialize();
 };
 
 type UpdateCallback = (alias: AcceptGameObjectAlias) => void;

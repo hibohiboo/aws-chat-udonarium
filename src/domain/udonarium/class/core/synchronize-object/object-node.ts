@@ -14,7 +14,7 @@ import type { InnerXml, XmlAttributes } from './object-serializer';
 
 @SyncObject('node')
 export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
-  declare value: number | string;
+  declare value: number | string | undefined;
 
   protected declare attributes: Attributes;
 
@@ -24,14 +24,14 @@ export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
 
   protected declare minorIndex: number;
 
-  constructor() {
-    super();
+  constructor(identifier?: string) {
+    super(identifier);
     SyncVar()(this, 'value');
     SyncVar()(this, 'attributes');
     SyncVar()(this, 'parentIdentifier');
     SyncVar()(this, 'majorIndex');
     SyncVar()(this, 'minorIndex');
-    this.value = '';
+    this.value = undefined;
     this.attributes = {};
     this.parentIdentifier = '';
     this.majorIndex = 0;
