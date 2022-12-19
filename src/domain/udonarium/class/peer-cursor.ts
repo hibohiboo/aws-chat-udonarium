@@ -1,3 +1,4 @@
+import { EVENT_NAME } from '../event/constants';
 import { ImageFile } from './core/file-storage/image-file';
 import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
@@ -43,7 +44,7 @@ export class PeerCursor extends GameObject {
   onStoreAdded() {
     super.onStoreAdded();
     if (!this.isMine) {
-      EventSystem.register(this).on('DISCONNECT_PEER', (event) => {
+      EventSystem.register(this).on(EVENT_NAME.DISCONNECT_PEER, (event) => {
         if (event.data.peerId !== this.peerId) return;
         setTimeout(() => {
           if (Network.peerIds.includes(this.peerId)) return;

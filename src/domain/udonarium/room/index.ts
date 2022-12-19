@@ -74,12 +74,12 @@ export const createPeerUser = (updateCallback: () => void) => {
       console.log(EVENT_NAME.DELETE_GAME_OBJECT, event);
     })
     .on(EVENT_NAME.OPEN_NETWORK, (event) => {
-      console.log('OPEN_NETWORK', event.data.peerId);
+      console.log(EVENT_NAME.OPEN_NETWORK, event.data.peerId);
       myUser.peerId = Network.peerContext.peerId;
       myUser.userId = Network.peerContext.userId;
     })
     .on(EVENT_NAME.NETWORK_ERROR, (event) => {
-      console.log('NETWORK_ERROR', event.data.peerId);
+      console.log(EVENT_NAME.NETWORK_ERROR, event.data.peerId);
       const { errorType } = event.data;
       const { errorMessage } = event.data;
 
