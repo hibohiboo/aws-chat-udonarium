@@ -24,6 +24,7 @@ export default defineConfig({
           react: ['react', 'react-dom'],
           rtk: ['react-redux', '@reduxjs/toolkit'],
           udonarium: ['crypto-js', 'lzbase62', 'msgpack-lite', 'pako', 'skyway-js'],
+          others: ['date-fns'],
         },
       },
     },
