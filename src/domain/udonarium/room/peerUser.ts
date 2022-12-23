@@ -1,3 +1,4 @@
+import { firstUsrName, LOCAL_STORAGE_USER_NAME_KEY } from '@/domain/peerUser/constants';
 import { ImageFile } from '../class/core/file-storage/image-file';
 import { ImageStorage } from '../class/core/file-storage/image-storage';
 import { ObjectStore } from '../class/core/synchronize-object/object-store';
@@ -17,7 +18,7 @@ export const createPeerCursor = () => {
   fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
   const noneIconImage = ImageStorage.instance.add(fileContext);
   const myCursor = PeerCursor.createMyCursor();
-  myCursor.name = 'プレイヤー';
+  myCursor.name = firstUsrName;
   myCursor.imageIdentifier = noneIconImage.identifier;
   setPeerUser(myCursor);
   return myCursor;
@@ -28,4 +29,5 @@ export const getUsers = () => {
 export const changeUserName = (name: string) => {
   const cusor = getPeerUser();
   cusor.name = name;
+  localStorage.setItem(LOCAL_STORAGE_USER_NAME_KEY, name);
 };
