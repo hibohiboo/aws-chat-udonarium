@@ -1,7 +1,7 @@
 import React from 'react';
-import ChatRoom from './apps/ChatRoom/ChatRoom';
-import RoomList from './apps/ChatRoom/RoomList';
-import useUdonariumChat from './hooks/useUdonariumChat';
+import useUdonariumChat from '../hooks/useUdonariumChat';
+import ChatRoom from './ChatRoom/ChatRoom';
+import RoomList from './ChatRoom/RoomList';
 
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 
