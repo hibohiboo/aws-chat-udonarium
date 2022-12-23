@@ -20,29 +20,29 @@ export interface ChatMessageContext {
 
 @SyncObject('chat')
 export class ChatMessage extends ObjectNode implements ChatMessageContext {
-  declare originFrom: string;
-  declare from: string;
-  declare to: string;
-  declare name: string;
-  declare tag: string;
-  declare dicebot: string;
-  declare imageIdentifier: string;
+  declare originFrom: string | undefined;
+  declare from: string | undefined;
+  declare to: string | undefined;
+  declare name: string | undefined;
+  declare tag: string | undefined;
+  declare dicebot: string | undefined;
+  declare imageIdentifier: string | undefined;
   constructor(identifier?: string) {
     super(identifier);
     SyncVar()(this, 'originFrom');
-    this.originFrom = '';
+    this.originFrom = undefined;
     SyncVar()(this, 'from');
-    this.from = '';
+    this.from = undefined;
     SyncVar()(this, 'to');
-    this.to = '';
+    this.to = undefined;
     SyncVar()(this, 'name');
-    this.name = '';
+    this.name = undefined;
     SyncVar()(this, 'tag');
-    this.tag = '';
+    this.tag = undefined;
     SyncVar()(this, 'dicebot');
-    this.dicebot = '';
+    this.dicebot = undefined;
     SyncVar()(this, 'imageIdentifier');
-    this.imageIdentifier = '';
+    this.imageIdentifier = undefined;
   }
 
   get tabIdentifier(): string | undefined {
@@ -52,8 +52,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     return <string>this.value;
   }
   get timestamp(): number {
-    let timestamp = this.getAttribute('timestamp');
-    let num = timestamp ? +timestamp : 0;
+    const timestamp = this.getAttribute('timestamp');
+    const num = timestamp ? +timestamp : 0;
     return Number.isNaN(num) ? 1 : num;
   }
   private _to?: string;
@@ -77,6 +77,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     return this._tags;
   }
   get image(): ImageFile | null {
+    if (!this.imageIdentifier) return null;
     return ImageStorage.instance.get(this.imageIdentifier);
   }
   get index(): number {

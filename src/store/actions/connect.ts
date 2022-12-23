@@ -13,28 +13,6 @@ import { chatMessageSlice } from '../slices/chatMessageSlice';
 import { peerUserSlice } from '../slices/peerUserSlice';
 import { roomSlice } from '../slices/roomSlice';
 
-const peerToContext = (u: PeerCursor) => u.toContext() as PeerUserContext;
-const peerRoomToContext = (room: PeerRoom) => ({
-  roomName: room.roomName,
-  alias: room.alias,
-  peerContexts: room.peerContexts.map((ctx) => ({
-    peerId: ctx.peerId,
-    roomId: ctx.roomId,
-    digestUserId: ctx.digestUserId,
-    digestPassword: ctx.digestPassword,
-  })),
-});
-const updatePeers = (thunkAPI: { dispatch: any }) => {
-  const users = getUsers();
-  const userContexts = users.map(peerToContext);
-  console.log('userContexts', userContexts);
-  thunkAPI.dispatch(peerUserSlice.actions.setUserContexts(userContexts));
-};
-const addChat = (thunkAPI: { dispatch: any }, event: ChatMessageEvent) => {
-  const message = chatEventToModel(event);
-  thunkAPI.dispatch(chatMessageSlice.actions.addMessage(message));
-};
-
 export const connect = createAsyncThunk<void, void, { state: RootState }>(
   'connect',
   async (req, thunkAPI) => {
@@ -74,3 +52,25 @@ export const connectRoom = createAsyncThunk<void, string, { state: RootState }>(
     updatePeers(thunkAPI);
   }
 );
+const peerToContext = (u: PeerCursor) => u.toContext() as PeerUserContext;
+const peerRoomToContext = (room: PeerRoom) => ({
+  roomName: room.roomName,
+  alias: room.alias,
+  peerContexts: room.peerContexts.map((ctx) => ({
+    peerId: ctx.peerId,
+    roomId: ctx.roomId,
+    digestUserId: ctx.digestUserId,
+    digestPassword: ctx.digestPassword,
+  })),
+});
+const updatePeers = (thunkAPI: { dispatch: any }) => {
+  const users = getUsers();
+  const userContexts = users.map(peerToContext);
+  console.log('userContexts', userContexts);
+  thunkAPI.dispatch(peerUserSlice.actions.setUserContexts(userContexts));
+};
+const addChat = (thunkAPI: { dispatch: any }, event: ChatMessageEvent) => {
+  const message = chatEventToModel(event);
+  if (!message) return;
+  thunkAPI.dispatch(chatMessageSlice.actions.addMessage(message));
+};

@@ -25,7 +25,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
   }
 
   get latestTimeStamp(): number {
-    let lastIndex = this.chatMessages.length - 1;
+    const lastIndex = this.chatMessages.length - 1;
     return lastIndex < 0 ? 0 : this.chatMessages[lastIndex].timestamp;
   }
 
@@ -44,8 +44,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
   addMessage(message: ChatMessageContext): ChatMessage {
     message.tabIdentifier = this.identifier;
 
-    let chat = new ChatMessage();
-    for (let key in message) {
+    const chat = new ChatMessage();
+    for (const key in message) {
       if (key === 'identifier') continue;
       if (key === 'tabIdentifier') continue;
       if (key === 'text') {
@@ -71,7 +71,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
   innerXml(): string {
     let xml = '';
-    for (let child of this.children) {
+    for (const child of this.children) {
       if (child instanceof ChatMessage && !child.isDisplayable) continue;
       xml += ObjectSerializer.instance.toXml(child);
     }

@@ -8,7 +8,10 @@ const chatMessageSelector = (state: RootState) => state.chatMessage;
 const adapterSelectors = chatMessagesAdapter.getSelectors();
 
 const chatMessagesSelector = createSelector(chatMessageSelector, adapterSelectors.selectAll);
-const selectedTabIdSelector = createSelector(chatMessageSelector, (state) => state.selectedTab);
+export const selectedTabIdSelector = createSelector(
+  chatMessageSelector,
+  (state) => state.selectedTab
+);
 const mainTabChatSelector = createSelector(
   chatMessagesSelector,
   selectedTabIdSelector,
