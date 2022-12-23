@@ -11,7 +11,12 @@ const App: React.FC = () => {
   return (
     <div className="App">
       {viewModel.room == null ? (
-        <RoomList rooms={viewModel.rooms} connectRoom={viewModel.connectRoomHandler} />
+        <RoomList
+          rooms={viewModel.rooms}
+          connectRoom={viewModel.connectRoomHandler}
+          userName={viewModel.userName}
+          setUserName={viewModel.setUserName}
+        />
       ) : (
         <ChatRoom
           roomName={viewModel.room.roomName}

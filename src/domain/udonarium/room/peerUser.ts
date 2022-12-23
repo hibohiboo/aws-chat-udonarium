@@ -19,11 +19,13 @@ export const createPeerCursor = () => {
   const myCursor = PeerCursor.createMyCursor();
   myCursor.name = 'プレイヤー';
   myCursor.imageIdentifier = noneIconImage.identifier;
-  PeerCursor.myCursor!.name = 'プレイヤー';
-  PeerCursor.myCursor!.imageIdentifier = noneIconImage.identifier;
   setPeerUser(myCursor);
   return myCursor;
 };
 export const getUsers = () => {
   return ObjectStore.instance.getObjects<PeerCursor>(PeerCursor);
+};
+export const changeUserName = (name: string) => {
+  const cusor = getPeerUser();
+  cusor.name = name;
 };

@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { PeerUser, PeerUserContext } from '@/domain/peerUser/types';
+import { changeUserName } from '@/domain/udonarium/room/peerUser';
 
 // コンパイラが ts4023のエラーを const store = configureStore で出すので解決のためにexport
 export interface PeerUserState {
@@ -23,4 +24,13 @@ export const peerUserSlice = createSlice({
       state.userContexts = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(inputUserName.fulfilled, (state, action) => {
+      state.self = state.self == null ? null : { ...state.self, name: action.payload };
+    });
+  },
+});
+export const inputUserName = createAsyncThunk<string, string>('inputUserName', async (req) => {
+  changeUserName(req);
+  return req;
 });

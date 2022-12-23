@@ -1,6 +1,7 @@
 import { ArrowButton, Loader } from '@chatscope/chat-ui-kit-react';
 import { Rooms } from '@/store/selectors/roomSelector';
 
+const centerStyle = { maxWidth: '500px', margin: '0 auto' } as const;
 const rowStyle = {
   roomId: { display: 'inline-block', width: '50px' },
   roomName: {
@@ -16,55 +17,61 @@ const rowStyle = {
   connect: { display: 'inline-block', width: '120px', verticalAlign: 'baseline' },
 } as const;
 
-const RoomList: React.FC<{ rooms: Rooms; connectRoom: (alias: string) => void }> = ({
-  rooms,
-  connectRoom,
-}) => {
+const RoomList: React.FC<{
+  rooms: Rooms;
+  userName: string;
+  connectRoom: (alias: string) => void;
+  setUserName: (text: string) => void;
+}> = ({ rooms, connectRoom, userName, setUserName }) => {
   if (!rooms) return <Loader />;
   if (rooms.length === 0) {
-    return (
-      <div>
-        <Header />
-        <div style={{ margin: '0 auto' }}>
-          入室可能な部屋はありません。
-          <input type="button" onClick={() => window.location.reload()} value="再読み込み" />
-        </div>
-      </div>
-    );
+    return <EmptyRooms />;
   }
 
   return (
-    <ul style={{ listStyle: 'none', width: '500px', margin: '0 auto' }}>
-      <li style={{ textAlign: 'center', fontWeight: 'bold' }}>
-        <span style={rowStyle.roomId}>ID</span>
-        <span style={rowStyle.roomName}>部屋名</span>
-        <span style={rowStyle.hasPassword}>🔒️</span>
-        <span style={rowStyle.numberOfEntrants}>👥</span>
-        <span style={rowStyle.connect}>ルーム入室</span>
-      </li>
-      {rooms.map((room) => (
-        <li key={room.alias} style={{ textAlign: 'center', lineHeight: '2' }}>
-          <span style={rowStyle.roomId}>{room.id}</span>
-          <span style={rowStyle.roomName}>{room.name}</span>
-          <span style={rowStyle.hasPassword}>{`${room.hasPassword ? '🔒️' : ''}`}</span>
-          <span style={rowStyle.numberOfEntrants}>{room.numberOfEntrants}</span>
-          <span style={rowStyle.connect}>
-            <ArrowButton
-              border
-              direction="right"
-              onClick={() => {
-                connectRoom(room.alias);
-              }}
-            >
-              接続
-            </ArrowButton>
-          </span>
+    <div>
+      <Header />
+      <InputArea name={userName} setUserName={setUserName} />
+      <ul style={{ listStyle: 'none', ...centerStyle }}>
+        <li style={{ textAlign: 'center', fontWeight: 'bold' }}>
+          <span style={rowStyle.roomId}>ID</span>
+          <span style={rowStyle.roomName}>部屋名</span>
+          <span style={rowStyle.hasPassword}>🔒️</span>
+          <span style={rowStyle.numberOfEntrants}>👥</span>
+          <span style={rowStyle.connect}>ルーム</span>
         </li>
-      ))}
-    </ul>
+        {rooms.map((room) => (
+          <li key={room.alias} style={{ textAlign: 'center', lineHeight: '2' }}>
+            <span style={rowStyle.roomId}>{room.id}</span>
+            <span style={rowStyle.roomName}>{room.name}</span>
+            <span style={rowStyle.hasPassword}>{`${room.hasPassword ? '🔒️' : ''}`}</span>
+            <span style={rowStyle.numberOfEntrants}>{room.numberOfEntrants}</span>
+            <span style={rowStyle.connect}>
+              <ArrowButton
+                border
+                direction="right"
+                onClick={() => {
+                  connectRoom(room.alias);
+                }}
+              >
+                入室
+              </ArrowButton>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
-
+const EmptyRooms: React.FC = () => (
+  <div style={{ ...centerStyle }}>
+    <Header />
+    <div style={{ margin: '0 auto' }}>
+      入室可能な部屋はありません。
+      <input type="button" onClick={() => window.location.reload()} value="再読み込み" />
+    </div>
+  </div>
+);
 const UdonLink: React.FC<{ url: string; label: string }> = (prop) => (
   <li>
     <a href={prop.url} target="_blank" rel="noreferrer">
@@ -74,7 +81,7 @@ const UdonLink: React.FC<{ url: string; label: string }> = (prop) => (
 );
 
 const Header: React.FC = () => (
-  <div>
+  <div style={{ ...centerStyle }}>
     <p>下記のユドナリウムとチャットできます。</p>
     <ul style={{ listStyle: 'none', display: 'flex', gap: '0 2rem' }}>
       {[
@@ -99,7 +106,16 @@ const Header: React.FC = () => (
       ))}
     </ul>
     <p>
-      現在、メインタブのみチャットできます。パスワード付きの部屋への入室は未実装です。ダイスコマンドは未実装です
+      現在、メインタブのみチャットできます。<br></br>
+      パスワード付きの部屋への入室は未実装です。<br></br>ダイスコマンドは未実装です
+    </p>
+  </div>
+);
+
+const InputArea: React.FC<{ name: string; setUserName: (text: string) => void }> = (props) => (
+  <div style={{ ...centerStyle }}>
+    <p>
+      名前: <input value={props.name} onChange={(e) => props.setUserName(e.target.value)} />
     </p>
   </div>
 );
