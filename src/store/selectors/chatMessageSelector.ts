@@ -7,11 +7,15 @@ import { chatMessagesAdapter } from '../slices/chatMessageSlice';
 const chatMessageSelector = (state: RootState) => state.chatMessage;
 const adapterSelectors = chatMessagesAdapter.getSelectors();
 
-export const chatMessagesSelector = createSelector(chatMessageSelector, adapterSelectors.selectAll);
-
-const mainTabChatSelector = createSelector(chatMessagesSelector, (list) => {
-  return list.filter((chat) => chat.tab === 'MainTab');
-});
+const chatMessagesSelector = createSelector(chatMessageSelector, adapterSelectors.selectAll);
+const selectedTabIdSelector = createSelector(chatMessageSelector, (state) => state.selectedTab);
+const mainTabChatSelector = createSelector(
+  chatMessagesSelector,
+  selectedTabIdSelector,
+  (list, id) => {
+    return list.filter((chat) => chat.tab === id);
+  }
+);
 
 export const chatMessageModelSelector = createSelector(
   mainTabChatSelector,
