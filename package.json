@@ -28,7 +28,7 @@
     "@types/msgpack-lite": "^0.1.8",
     "@types/pako": "^2.0.0",
     "@types/react": "^18.0.26",
-    "@types/react-dom": "^18.0.9",
+    "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.0.0",
     "dependency-cruiser": "^12.1.1",
     "eslint": "^8.30.0",
