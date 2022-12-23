@@ -1,5 +1,6 @@
 import { ArrowButton, Loader } from '@chatscope/chat-ui-kit-react';
 import { Rooms } from '@/store/selectors/roomSelector';
+
 const rowStyle = {
   roomId: { display: 'inline-block', width: '50px' },
   roomName: {
@@ -14,13 +15,22 @@ const rowStyle = {
   numberOfEntrants: { display: 'inline-block', width: '30px' },
   connect: { display: 'inline-block', width: '120px', verticalAlign: 'baseline' },
 } as const;
+
 const RoomList: React.FC<{ rooms: Rooms; connectRoom: (alias: string) => void }> = ({
   rooms,
   connectRoom,
 }) => {
   if (!rooms) return <Loader />;
   if (rooms.length === 0) {
-    return <div style={{ margin: '0 auto' }}>入室可能な部屋はありません。</div>;
+    return (
+      <div>
+        <Header />
+        <div style={{ margin: '0 auto' }}>
+          入室可能な部屋はありません。
+          <input type="button" onClick={() => window.location.reload()} value="再読み込み" />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -54,4 +64,44 @@ const RoomList: React.FC<{ rooms: Rooms; connectRoom: (alias: string) => void }>
     </ul>
   );
 };
+
+const UdonLink: React.FC<{ url: string; label: string }> = (prop) => (
+  <li>
+    <a href={prop.url} target="_blank" rel="noreferrer">
+      {prop.label}
+    </a>
+  </li>
+);
+
+const Header: React.FC = () => (
+  <div>
+    <p>下記のユドナリウムとチャットできます。</p>
+    <ul style={{ listStyle: 'none', display: 'flex', gap: '0 2rem' }}>
+      {[
+        {
+          url: 'https://d3snr6xc5uvnuy.cloudfront.net/cartagraph-udonarium/udonarium/',
+          label: 'ユドナリウム',
+        },
+        {
+          url: 'https://d3snr6xc5uvnuy.cloudfront.net/cartagraph-udonarium-lily/udonarium_lily/',
+          label: 'Lily',
+        },
+        {
+          url: 'https://d3snr6xc5uvnuy.cloudfront.net/cartagraph-udonarium-with-fly/udonarium/',
+          label: 'WithFly',
+        },
+        {
+          url: 'https://d3snr6xc5uvnuy.cloudfront.net/rooper-udonarium/udonarium/',
+          label: 'RoopeR',
+        },
+      ].map((props) => (
+        <UdonLink {...props} key={props.url} />
+      ))}
+    </ul>
+    <p>
+      現在、メインタブのみチャットできます。パスワード付きの部屋への入室は未実装です。ダイスコマンドは未実装です
+    </p>
+  </div>
+);
+
 export default RoomList;
