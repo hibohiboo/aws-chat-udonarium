@@ -107,7 +107,10 @@ const Header: React.FC = () => (
     </ul>
     <p>
       現在、メインタブのみチャットできます。<br></br>
-      パスワード付きの部屋への入室は未実装です。<br></br>ダイスコマンドは未実装です
+      パスワード付きの部屋への入室は未実装です。<br></br>ダイスコマンドは未実装です。→
+      <a href="https://github.com/hibohiboo/aws-chat-udonarium" target="_blank" rel="noreferrer">
+        github
+      </a>
     </p>
   </div>
 );
