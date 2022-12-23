@@ -1,5 +1,6 @@
 import { UserId } from '@/domain/peerUser/types';
-import { Identifer, UpdateGameObjectEvent } from '../types';
+import { Identifer } from '@/domain/udonarium/types';
+import { UpdateGameObjectEvent } from '../types';
 
 export type ChatMessageEvent = UpdateGameObjectEvent<'chat', ChatSyncData>;
 
