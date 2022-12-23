@@ -69,5 +69,7 @@ module.exports = {
     'react/prop-types': ['off'],
     // ???
     'jsx-a11y/aria-role': ['off'],
+    // constにできるところはconst
+    'prefer-const': ['error'],
   },
 };
