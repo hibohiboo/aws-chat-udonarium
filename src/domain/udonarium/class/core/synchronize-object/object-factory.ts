@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+import { notImplementationGameObjects } from '@/domain/gameObject/constants';
 import type { GameObject } from './game-object';
 
 // eslint-disable-next-line no-var, import/no-mutable-exports
@@ -42,6 +43,10 @@ export class ObjectFactory {
   create<T extends GameObject>(alias: string, identifer?: string): T | null {
     const ClassConstructor = this.constructorMap.get(alias);
     if (!ClassConstructor) {
+      // 警告メッセージが溢れるので、明確に実装していないUdonariumオブジェクトは警告から弾く
+      if (notImplementationGameObjects.includes(alias)) {
+        return null;
+      }
       console.warn(`${alias}という名のGameObjectクラスは定義されていません`);
       return null;
     }

@@ -3,6 +3,6 @@ import { RootState } from '..';
 
 const peerUserSelector = (state: RootState) => state.peerUser;
 
-export const userIdSelector = createSelector(peerUserSelector, (state) => {
-  return state.self?.userId;
+export const selfIdSelector = createSelector(peerUserSelector, (state) => {
+  return state.self?.id;
 });

@@ -2,7 +2,7 @@ import { sendChatMessageAction } from '@/store/actions/chat';
 import { connectRoom } from '@/store/actions/connect';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { chatMessageModelSelector } from '@/store/selectors/chatMessageSelector';
-import { userIdSelector } from '@/store/selectors/peerUserSelector';
+import { selfIdSelector } from '@/store/selectors/peerUserSelector';
 import { connectedRoomSelector, roomsSelector } from '@/store/selectors/roomSelector';
 
 const useUdonariumChat = () => {
@@ -10,7 +10,7 @@ const useUdonariumChat = () => {
   const rooms = useAppSelector(roomsSelector);
   const room = useAppSelector(connectedRoomSelector);
   const messages = useAppSelector(chatMessageModelSelector);
-  const selfUserId = useAppSelector(userIdSelector);
+  const selfUserId = useAppSelector(selfIdSelector);
   console.warn(messages);
   const connectRoomHandler = (alias: string) => {
     dispatch(connectRoom(alias));

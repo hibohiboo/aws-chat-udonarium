@@ -29,6 +29,7 @@ export const connect = createAsyncThunk<void, void, { state: RootState }>(
     thunkAPI.dispatch(roomSlice.actions.setRooms(rooms.map(peerRoomToContext)));
     thunkAPI.dispatch(
       peerUserSlice.actions.setSelf({
+        id: userContext.identifier,
         userId: userContext.syncData.userId,
         name: userContext.syncData.name,
       })
@@ -52,7 +53,7 @@ export const connectRoom = createAsyncThunk<void, string, { state: RootState }>(
     updatePeers(thunkAPI);
   }
 );
-const peerToContext = (u: PeerCursor) => u.toContext() as PeerUserContext;
+const peerToContext = (u: PeerCursor): PeerUserContext => u.toContext() as PeerUserContext;
 const peerRoomToContext = (room: PeerRoom) => ({
   roomName: room.roomName,
   alias: room.alias,

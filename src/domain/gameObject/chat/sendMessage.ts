@@ -1,5 +1,5 @@
 import { UserId } from '@/domain/peerUser/types';
-import { getChatMessageService } from './chatMessageService';
+import { getChatMessageService } from './ChatMessageService';
 import { DEFAULT_GAME_TYPE } from './constants';
 
 export const sendChatMessage = (tabId: string, text: string, from: UserId) => {
