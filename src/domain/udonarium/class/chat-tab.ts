@@ -1,3 +1,4 @@
+import { EVENT_NAME } from '../event/constants';
 import { ChatMessage, ChatMessageContext } from './chat-message';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
@@ -57,7 +58,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
       chat.setAttribute(key, msg);
     }
     chat.initialize();
-    EventSystem.trigger('SEND_MESSAGE', {
+    EventSystem.trigger(EVENT_NAME.SEND_MESSAGE, {
       tabIdentifier: this.identifier,
       messageIdentifier: chat.identifier,
     });

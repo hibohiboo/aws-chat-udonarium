@@ -17,6 +17,8 @@ export const EVENT_NAME = {
   CANCEL_TASK_: 'CANCEL_TASK_',
   FILE_SEND_CHANK_: 'FILE_SEND_CHANK_',
   FILE_MORE_CHANK_: 'FILE_MORE_CHANK_',
+  // チャット
+  SEND_MESSAGE: 'SEND_MESSAGE',
 
   // ↑ ユドナリウム core
 } as const;

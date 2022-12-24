@@ -37,7 +37,10 @@ const createPeerUser = (updateCallback: UpdateCallback) => {
 
   EventSystem.register('application init')
     .on(EVENT_NAME.UPDATE_GAME_OBJECT, (event) => {
-      if (import.meta.env.DEV && checkAcceptObject(event.data.aliasName)) {
+      if (import.meta.env.DEV) {
+        console.debug(EVENT_NAME.UPDATE_GAME_OBJECT, event);
+      }
+      if (checkAcceptObject(event.data.aliasName)) {
         console.log(EVENT_NAME.UPDATE_GAME_OBJECT, event);
         updateCallback(event.data.aliasName, event);
       } else if (event.data.aliasName == null) {
