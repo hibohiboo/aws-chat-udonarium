@@ -118,7 +118,7 @@ const Header: React.FC = () => (
 const InputArea: React.FC<{ name: string; setUserName: (text: string) => void }> = (props) => (
   <div style={{ ...centerStyle }}>
     <p>
-      名前: <input value={props.name} onChange={(e) => props.setUserName(e.target.value)} />
+      名前: <input defaultValue={props.name} onBlur={(e) => props.setUserName(e.target.value)} />
     </p>
   </div>
 );
