@@ -67,7 +67,7 @@ export class ImageFile {
   private constructor() {}
 
   static createEmpty(identifier: string): ImageFile {
-    let imageFile = new ImageFile();
+    const imageFile = new ImageFile();
     imageFile.context.identifier = identifier;
 
     return imageFile;
@@ -77,13 +77,13 @@ export class ImageFile {
   static create(context: ImageContext): ImageFile;
   static create(arg: any): ImageFile {
     if (typeof arg === 'string') {
-      let imageFile = new ImageFile();
+      const imageFile = new ImageFile();
       imageFile.context.identifier = arg;
       imageFile.context.name = arg;
       imageFile.context.url = arg;
       return imageFile;
     } else {
-      let imageFile = new ImageFile();
+      const imageFile = new ImageFile();
       imageFile.apply(arg);
       return imageFile;
     }
@@ -101,9 +101,9 @@ export class ImageFile {
   }
 
   private static async _createAsync(blob: Blob, name?: string): Promise<ImageFile> {
-    let arrayBuffer = await FileReaderUtil.readAsArrayBufferAsync(blob);
+    const arrayBuffer = await FileReaderUtil.readAsArrayBufferAsync(blob);
 
-    let imageFile = new ImageFile();
+    const imageFile = new ImageFile();
     imageFile.context.identifier = await FileReaderUtil.calcSHA256Async(arrayBuffer);
     imageFile.context.name = name || ''; // 型合わせのために空文字を挿入
     imageFile.context.blob = new Blob([arrayBuffer], { type: blob.type });
@@ -130,18 +130,19 @@ export class ImageFile {
     if (!this.context.name && context.name) this.context.name = context.name;
     if (!this.context.blob && context.blob) this.context.blob = context.blob;
     if (!this.context.type && context.type) this.context.type = context.type;
-    if (!this.context.url && context.url) {
-      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(context.url);
+    if (this.context.url && context.url) {
+      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(this.context.url);
       this.context.url = context.url;
-    }
+    } else if (!this.context.url && context.url) this.context.url = context.url;
     if (!this.context.thumbnail.blob && context.thumbnail.blob)
       this.context.thumbnail.blob = context.thumbnail.blob;
     if (!this.context.thumbnail.type && context.thumbnail.type)
       this.context.thumbnail.type = context.thumbnail.type;
-    if (!this.context.thumbnail.url && context.thumbnail.url) {
-      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(context.thumbnail.url);
+    if (this.context.thumbnail.url && context.thumbnail.url) {
+      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(this.context.thumbnail.url);
       this.context.thumbnail.url = context.thumbnail.url;
-    }
+    } else if (!this.context.thumbnail.url && context.thumbnail.url)
+      this.context.thumbnail.url = context.thumbnail.url;
     this.createURLs();
   }
 
@@ -176,14 +177,14 @@ export class ImageFile {
 
   private static createThumbnailAsync(context: ImageContext): Promise<ThumbnailContext> {
     return new Promise((resolve, reject) => {
-      let image: HTMLImageElement = new Image();
+      const image: HTMLImageElement = new Image();
       image.onload = (event) => {
-        let scale: number = Math.min(128 / Math.max(image.width, image.height), 1.0);
-        let dstWidth = image.width * scale;
-        let dstHeight = image.height * scale;
+        const scale: number = Math.min(128 / Math.max(image.width, image.height), 1.0);
+        const dstWidth = image.width * scale;
+        const dstHeight = image.height * scale;
 
-        let canvas: HTMLCanvasElement = document.createElement('canvas');
-        let render: CanvasRenderingContext2D = canvas.getContext('2d')!;
+        const canvas: HTMLCanvasElement = document.createElement('canvas');
+        const render: CanvasRenderingContext2D = canvas.getContext('2d')!;
         canvas.width = image.width;
         canvas.height = image.height;
 
@@ -195,7 +196,7 @@ export class ImageFile {
             console.warn('cannot to blob');
             return reject();
           }
-          let thumbnail: ThumbnailContext = {
+          const thumbnail: ThumbnailContext = {
             type: blob.type,
             blob: blob,
             url: window.URL.createObjectURL(blob),
