@@ -72,11 +72,14 @@ const createPeerUser = (updateCallback: UpdateCallback) => {
         ];
 
         if (quietErrorTypes.includes(errorType)) return;
-        alert(`ネットワークエラー -> ${errorMessage}`);
-
-        if (!reconnectErrorTypes.includes(errorType)) return;
-        alert(`ネットワークエラー -> このウィンドウを閉じると再接続を試みます。`);
-        Network.open();
+        alert(
+          `ネットワークエラー -> ${errorMessage}。このウィンドウを閉じると再読み込みを行いまs。`
+        );
+        window.location.reload();
+        // alert(`ネットワークエラー -> ${errorMessage}`);
+        // if (!reconnectErrorTypes.includes(errorType)) return;
+        // alert(`ネットワークエラー -> このウィンドウを閉じると再接続を試みます。`);
+        // Network.open();
       })();
     })
     .on(EVENT_NAME.CONNECT_PEER, (event) => {
