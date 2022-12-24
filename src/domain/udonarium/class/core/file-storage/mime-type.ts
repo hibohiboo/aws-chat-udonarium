@@ -37,7 +37,7 @@ export namespace MimeType {
   const isMineType = (ext: any): ext is keyof typeof types => (types as any)[ext] != null;
 
   export function type(fileName: string): string {
-    let ext = fileName.replace(/.*[\.\/\\]/, '').toLowerCase();
+    const ext = fileName.replace(/.*[\.\/\\]/, '').toLowerCase();
     if (isMineType(ext)) {
       return types[ext];
     }
@@ -45,7 +45,7 @@ export namespace MimeType {
   }
 
   export function extension(mimeType: string): string {
-    for (let key in types) {
+    for (const key in types) {
       if (isMineType(key) && types[key] === mimeType) {
         return key;
       }

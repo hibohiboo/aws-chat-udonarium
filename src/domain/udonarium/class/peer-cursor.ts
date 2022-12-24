@@ -73,12 +73,12 @@ export class PeerCursor extends GameObject {
   }
 
   private static find(map: Map<string, string>, key: string, isUserId: boolean): PeerCursor | null {
-    let identifier = map.get(key);
+    const identifier = map.get(key);
     if (identifier != null && ObjectStore.instance.get(identifier))
       return ObjectStore.instance.get<PeerCursor>(identifier);
-    let cursors = ObjectStore.instance.getObjects<PeerCursor>(PeerCursor);
-    for (let cursor of cursors) {
-      let id = isUserId ? cursor.userId : cursor.peerId;
+    const cursors = ObjectStore.instance.getObjects<PeerCursor>(PeerCursor);
+    for (const cursor of cursors) {
+      const id = isUserId ? cursor.userId : cursor.peerId;
       if (id === key) {
         map.set(id, cursor.identifier);
         return cursor;
@@ -100,8 +100,8 @@ export class PeerCursor extends GameObject {
 
   // override
   apply(context: ObjectContext) {
-    let userId = context.syncData['userId'];
-    let peerId = context.syncData['peerId'];
+    const userId = context.syncData['userId'];
+    const peerId = context.syncData['peerId'];
     if (userId !== this.userId) {
       PeerCursor.userIdMap.set(userId, this.identifier);
       PeerCursor.userIdMap.delete(this.userId);

@@ -4,7 +4,7 @@ import * as SHA256 from 'crypto-js/sha256';
 export namespace FileReaderUtil {
   export function readAsArrayBufferAsync(blob: Blob): Promise<ArrayBuffer> {
     return new Promise<ArrayBuffer>((resolve, reject) => {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = (event) => {
         resolve(reader.result as ArrayBuffer);
       };
@@ -17,7 +17,7 @@ export namespace FileReaderUtil {
 
   export function readAsTextAsync(blob: Blob): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = (event) => {
         resolve(reader.result as string);
       };
@@ -43,7 +43,7 @@ export namespace FileReaderUtil {
   }
 
   function _calcSHA256(arrayBuffer: ArrayBuffer): string {
-    let wordArray = WordArray.create(arrayBuffer as any);
+    const wordArray = WordArray.create(arrayBuffer as any);
     return SHA256(wordArray).toString();
   }
 }
